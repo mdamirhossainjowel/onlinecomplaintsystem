@@ -24,10 +24,12 @@ const Complaint = () => {
             />
             <div class="modal-action">
               <label
-              htmlFor="my-modal-3"
+                htmlFor="my-modal-3"
                 className="btn btn-accent w-full"
                 type="submit"
-              >Post</label>
+              >
+                Post
+              </label>
             </div>
           </div>
         </div>
@@ -61,13 +63,11 @@ const Complaint = () => {
                 </div>
               </td>
               <td>
-                Zemlak, Daniel and Leannon
-                <br />
-                <span className="badge badge-ghost badge-sm">
-                  Desktop Support Technician
-                </span>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.<br/> Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s
               </td>
-              <td>Purple</td>
+              <td>pending</td>
               <th>
                 <button className="btn btn-ghost btn-xs">details</button>
               </th>
@@ -91,13 +91,11 @@ const Complaint = () => {
                 </div>
               </td>
               <td>
-                Carroll Group
-                <br />
-                <span className="badge badge-ghost badge-sm">
-                  Tax Accountant
-                </span>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.<br/> Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s
               </td>
-              <td>Red</td>
+              <td>pending</td>
               <th>
                 <button className="btn btn-ghost btn-xs">details</button>
               </th>
@@ -121,13 +119,12 @@ const Complaint = () => {
                 </div>
               </td>
               <td>
-                Rowe-Schoen
-                <br />
-                <span className="badge badge-ghost badge-sm">
-                  Office Assistant I
-                </span>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.<br/> Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s
               </td>
-              <td>Crimson</td>
+              <td>pending</td>
+
               <th>
                 <button className="btn btn-ghost btn-xs">details</button>
               </th>
@@ -151,13 +148,12 @@ const Complaint = () => {
                 </div>
               </td>
               <td>
-                Wyman-Ledner
-                <br />
-                <span className="badge badge-ghost badge-sm">
-                  Community Outreach Specialist
-                </span>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.<br/> Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s
               </td>
-              <td>Indigo</td>
+              <td>pending</td>
+
               <th>
                 <button className="btn btn-ghost btn-xs">details</button>
               </th>
