@@ -1,12 +1,37 @@
 import React from "react";
+import {
+  useSignInWithEmailAndPassword,
+  useSignInWithGoogle,
+} from "react-firebase-hooks/auth";
 
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import auth from "../../firebase.init";
+import Loading from "./Loading";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
-
-  const onSubmit = (data) => {};
+  const [signInWithGoogle,userGoogle,] = useSignInWithGoogle(auth);
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
+  const navigate = useNavigate();
+  if (error) {
+    return (
+      <div>
+        <p>Error: {error.message}</p>
+      </div>
+    );
+  }
+  if (user || userGoogle) {
+    return navigate("/");
+  }
+  if (loading) {
+    return <Loading />;
+  }
+  const onSubmit = async (data) => {
+    await signInWithEmailAndPassword(data.Email, data.Password);
+    navigate("/");
+  };
   return (
     <div className="card lg:card-side bg-base-100 shadow-xl mx-6 lg:w-2/3 lg:mx-auto my-14">
       <figure className=" lg:w-1/2">
@@ -50,7 +75,10 @@ const Login = () => {
 
         <div className="divider">OR</div>
         <div className="card-actions justify-center">
-          <button className="btn btn-accent w-full max-w-lg ">
+          <button
+            onClick={() => signInWithGoogle()}
+            className="btn btn-accent w-full max-w-lg "
+          >
             Login With Google
           </button>
         </div>
