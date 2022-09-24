@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useAuthState, useUpdateProfile } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import auth from "../firebase.init";
 
 const Profile = () => {
   const [user] = useAuthState(auth);
-  console.log(user)
 
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -22,6 +23,9 @@ const Profile = () => {
         <p>Error: {error.message}</p>
       </div>
     );
+  }
+  if (!user) {
+    return  navigate("/login");
   }
   if (updating) {
     return <p>Updating...</p>;

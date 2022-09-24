@@ -10,7 +10,7 @@ import auth from "../../firebase.init";
 import Loading from "./Loading";
 
 const Registration = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit ,refetch } = useForm();
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
   const [ signInWithGoogle,userGoogle] = useSignInWithGoogle(auth);
@@ -31,10 +31,21 @@ const Registration = () => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data);
+   
     if (data.Password === data.Confirm_Password) {
       await createUserWithEmailAndPassword(data.Email, data.Confirm_Password);
       await updateProfile({ displayName: data.Name });
+      fetch(`http://localhost:5000/users`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((result) => console.log(result));
+        refetch();
+
     } else {
       alert("Both Password Should Be Same");
     }

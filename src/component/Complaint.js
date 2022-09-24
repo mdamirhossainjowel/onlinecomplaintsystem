@@ -1,6 +1,29 @@
 import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useForm } from "react-hook-form";
+import auth from "../firebase.init";
 
 const Complaint = () => {
+  const [user] = useAuthState(auth);
+  const {
+    register,
+    handleSubmit,
+    refetch
+   
+  } = useForm();
+  const onSubmit = (data) => {
+    fetch(`http://localhost:5000/complaints`, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => console.log(result));
+    
+  };
+
   return (
     <div className="my-5">
       <div className="mx-3 mb-3 flex justify-end ">
@@ -18,19 +41,24 @@ const Complaint = () => {
               ✕
             </label>
             <h3 className="text-lg font-bold">Complaint about your problem!</h3>
-            <input
-              className="input input-bordered input-accent w-full h-40 max-w-lg my-3"
-              placeholder="Enter Your Complaint...."
-            />
-            <div className="modal-action">
-              <label
-                htmlFor="my-modal-3"
-                className="btn btn-accent w-full"
-                type="submit"
-              >
-                Post
-              </label>
-            </div>
+            <form>
+              <input
+                className="input input-bordered input-accent w-full h-40 max-w-lg mb-3"
+                placeholder="Enter Your Complaint...."
+                {...register("Complaint", { required: true })}
+              />
+              <div className="modal-action justify-center">
+                <label
+                  htmlFor="my-modal-3"
+                  className=" btn btn-accent"
+    
+                  type="submit"
+                  onClick={handleSubmit(onSubmit)}
+                >
+                  POST
+                </label>
+              </div>
+            </form>
           </div>
         </div>
       </div>

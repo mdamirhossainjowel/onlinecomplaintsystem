@@ -58,7 +58,11 @@ const Header = () => {
               </li>
             ) : (
               <li>
-                <Link to="login" className="btn-ghost">
+                <Link
+                  to="login"
+                  className="btn-ghost"
+                  onClick={() => signOut(auth)}
+                >
                   Logout
                 </Link>
               </li>
@@ -92,18 +96,22 @@ const Header = () => {
             </Link>
           </li>
           {!user ? (
-              <li>
-                <Link to="login" className="btn-ghost">
-                  Login
-                </Link>
-              </li>
-            ) : (
-              <li>
-                <Link to="login" className="btn-ghost" onClick={() => signOut(auth)}>
-                  Logout
-                </Link>
-              </li>
-            )}
+            <li>
+              <Link to="login" className="btn-ghost">
+                Login
+              </Link>
+            </li>
+          ) : (
+            <li>
+              <Link
+                to="login"
+                className="btn-ghost"
+                onClick={() => signOut(auth)}
+              >
+                Logout
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </div>
