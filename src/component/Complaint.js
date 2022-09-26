@@ -1,20 +1,32 @@
-import React from "react";
-// import { useAuthState } from "react-firebase-hooks/auth";
+import React, { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
-// import auth from "../firebase.init";
+import auth from "../firebase.init";
+import { useQuery } from "react-query";
 
 const Complaint = () => {
-  // const [user] = useAuthState(auth);
+  const [user] = useAuthState(auth);
+  const [complaint, setComplaint] = useState("");
+  let detailsId = "";
+  const fetchcomplaintList = async () => {
+    const res = await fetch("http://localhost:5000/complaints");
+    return res.json();
+  };
+  const { data, refetch } = useQuery("fetchcomplaintList", fetchcomplaintList);
   const {
-    register,
-    refetch,
-    
     formState: { isValid },
-    handleSubmit,
-  } = useForm({
-    mode: "onChange",
-  });
-  const onSubmit =  (data) => {
+  } = useForm();
+  const handleChange = (e) => {
+    setComplaint(e.target.value);
+  };
+const detailsdata=''
+  const handleSubmit = () => {
+    const data = {
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL,
+      complaint: complaint,
+    };
     fetch(`http://localhost:5000/complaints`, {
       method: "POST",
       body: JSON.stringify(data),
@@ -24,12 +36,13 @@ const Complaint = () => {
     }).then((res) => res.json());
 
     alert("Complaint Posted");
-    refetch()
-    
+    refetch();
   };
 
+
+
   return (
-    <div className="my-5">
+    <div className="my-5 min-h-screen">
       <div className="mx-3 mb-3 flex justify-end ">
         <label htmlFor="my-modal-3" className="btn modal-button ">
           Post a Complaint?
@@ -47,21 +60,22 @@ const Complaint = () => {
               <h3 className="text-lg font-bold">
                 Complaint about your problem!
               </h3>
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="modal-close justify-center my-8">
                 <input
                   className="input input-bordered input-accent w-full h-40 max-w-lg mb-3"
                   placeholder="Enter Your Complaint...."
-                  {...register("Complaint", { required: true })}
+                  onChange={handleChange}
                 />
-
-                <div className="modal-action justify-center">
-                  <input
-                    className=" btn btn-accent modal-close"
-                    disabled={!isValid}
-                    type='submit'
-                  />
-                </div>
-              </form>
+                <label
+                  htmlFor="my-modal-3"
+                  className=" btn btn-accent"
+                  disabled={!isValid}
+                  type="submit"
+                  onClick={() => handleSubmit()}
+                >
+                  Post
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -70,171 +84,82 @@ const Complaint = () => {
         <table className="table w-full">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Complaint</th>
+              <th className="text-center">Name</th>
+              <th className="text-center">Complaint</th>
               <th>Status</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>
-                <div className="flex items-center space-x-3">
-                  <div className="avatar">
-                    <div className="mask mask-squircle w-12 h-12">
-                      <img
-                        src="/tailwind-css-component-profile-2@56w.png"
-                        alt="Avatar Tailwind CSS Component"
-                      />
+            {data?.map((complaints, index) => (
+              <tr key={index}>
+                <td>
+                  <div className="flex items-center space-x-3">
+                    <div className="avatar">
+                      <div className="mask mask-squircle w-12 h-12">
+                        <img
+                          src={complaints?.photo}
+                          alt="Avatar Tailwind CSS Component"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="font-bold">{complaints?.name}</div>
                     </div>
                   </div>
-                  <div>
-                    <div className="font-bold">Hart Hagerty</div>
-                    <div className="text-sm opacity-50">United States</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
-                <br /> Lorem Ipsum has been the industry's standard dummy text
-                ever since the 1500s
-              </td>
-              <td>pending</td>
-              <th>
-                <label
-                  htmlFor="my-modal-4"
-                  className="btn btn-ghost btn-xs modal-button"
-                  type="submit"
-                >
-                  details
-                </label>
-              </th>
-            </tr>
-            <input type="checkbox" id="my-modal-4" className="modal-toggle" />
-            <div className="modal">
-              <div className="modal-box relative">
-                <label
-                  htmlFor="my-modal-4"
-                  className="btn btn-sm btn-circle absolute right-2 top-2"
-                >
-                  ✕
-                </label>
-                <h3 className="text-lg font-bold">Complaint by Hart Hagerty</h3>
-                <div className="flex items-center space-x-3">
-                  <div className="avatar">
-                    <div className="mask mask-squircle w-12 h-12">
-                      <img
-                        src="/tailwind-css-component-profile-2@56w.png"
-                        alt="Avatar Tailwind CSS Component"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="font-bold">Hart Hagerty</div>
-                    <div className="text-sm opacity-50">United States</div>
-                  </div>
-                </div>
-                <div>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.
-                  <br /> Lorem Ipsum has been the industry's standard dummy text
-                  ever since the 1500s
-                </div>
-              </div>
-            </div>
-
-            <tr>
-              <td>
-                <div className="flex items-center space-x-3">
-                  <div className="avatar">
-                    <div className="mask mask-squircle w-12 h-12">
-                      <img
-                        src="/tailwind-css-component-profile-3@56w.png"
-                        alt="Avatar Tailwind CSS Component"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="font-bold">Brice Swyre</div>
-                    <div className="text-sm opacity-50">China</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
-                <br /> Lorem Ipsum has been the industry's standard dummy text
-                ever since the 1500s
-              </td>
-              <td>pending</td>
-              <th>
-                <button className="btn btn-ghost btn-xs">details</button>
-              </th>
-            </tr>
-
-            <tr>
-              <td>
-                <div className="flex items-center space-x-3">
-                  <div className="avatar">
-                    <div className="mask mask-squircle w-12 h-12">
-                      <img
-                        src="/tailwind-css-component-profile-4@56w.png"
-                        alt="Avatar Tailwind CSS Component"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="font-bold">Marjy Ferencz</div>
-                    <div className="text-sm opacity-50">Russia</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
-                <br /> Lorem Ipsum has been the industry's standard dummy text
-                ever since the 1500s
-              </td>
-              <td>pending</td>
-
-              <th>
-                <button className="btn btn-ghost btn-xs">details</button>
-              </th>
-            </tr>
-
-            <tr>
-              <td>
-                <div className="flex items-center space-x-3">
-                  <div className="avatar">
-                    <div className="mask mask-squircle w-12 h-12">
-                      <img
-                        src="/tailwind-css-component-profile-5@56w.png"
-                        alt="Avatar Tailwind CSS Component"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="font-bold">Yancy Tear</div>
-                    <div className="text-sm opacity-50">Brazil</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
-                <br /> Lorem Ipsum has been the industry's standard dummy text
-                ever since the 1500s
-              </td>
-              <td>pending</td>
-
-              <th>
-                <button className="btn btn-ghost btn-xs">details</button>
-              </th>
-            </tr>
+                </td>
+                <td>{complaints?.complaint.slice(0, 80)}...</td>
+                <td>pending</td>
+                <th>
+                  <label
+                    htmlFor="my-modal-4"
+                    className="btn btn-ghost btn-xs modal-button"
+                    onClick={() => {
+                      detailsId = complaints?._id;
+                      console.log(detailsId);
+                    }}
+                  >
+                    details
+                  </label>
+                </th>
+              </tr>
+            ))}
           </tbody>
         </table>
+        <input type="checkbox" id="my-modal-4" className="modal-toggle" />
+
+        <div className="modal">
+          <div className="modal-box relative">
+            <label
+              htmlFor="my-modal-4"
+              className="btn btn-sm btn-circle absolute right-2 top-2"
+            >
+              ✕
+            </label>
+{/* {
+  data.find(detailsdata=> detailsdata.id === detailsId)
+} */}
+            <h3 className="text-lg font-bold">
+              Complaint by {detailsdata?.name}
+            </h3>
+            <div className="flex items-center space-x-3 my-4">
+              <div className="avatar">
+                <div className="mask mask-squircle w-12 h-12">
+                  <img
+                    src={detailsdata?.photo}
+                    alt="Avatar Tailwind CSS Component"
+                  />
+                </div>
+              </div>
+              <div>
+                <div className="font-bold">{detailsdata?.name}</div>
+              </div>
+            </div>
+            <div>{detailsdata?.complaint}</div>
+          </div>
+        </div>
       </div>
+      ;
     </div>
   );
 };
