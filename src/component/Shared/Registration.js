@@ -35,7 +35,7 @@ const Registration = () => {
     if (data.Password === data.Confirm_Password) {
       await createUserWithEmailAndPassword(data.Email, data.Confirm_Password);
       await updateProfile({ displayName: data.Name });
-      fetch(`http://localhost:5000/users`, {
+      fetch(`https://onlinecomplaintsystem.herokuapp.com/users`, {
         method: "POST",
         body: JSON.stringify(data),
         headers: {

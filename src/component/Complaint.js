@@ -7,9 +7,10 @@ import { useQuery } from "react-query";
 const Complaint = () => {
   const [user] = useAuthState(auth);
   const [complaint, setComplaint] = useState("");
-  let detailsId = "";
+  const [detailsdata, setdetailsdata] = useState("");
+  let detailsId;
   const fetchcomplaintList = async () => {
-    const res = await fetch("http://localhost:5000/complaints");
+    const res = await fetch("https://onlinecomplaintsystem.herokuapp.com/complaints");
     return res.json();
   };
   const { data, refetch } = useQuery("fetchcomplaintList", fetchcomplaintList);
@@ -19,17 +20,18 @@ const Complaint = () => {
   const handleChange = (e) => {
     setComplaint(e.target.value);
   };
-const detailsdata=''
+
   const handleSubmit = () => {
-    const data = {
+    const complaintdata = {
       name: user.displayName,
       email: user.email,
       photo: user.photoURL,
       complaint: complaint,
     };
-    fetch(`http://localhost:5000/complaints`, {
+    fetch(`https://onlinecomplaintsystem.herokuapp.com/complaints`, {
+      
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify(complaintdata),
       headers: {
         "Content-Type": "application/json",
       },
@@ -38,8 +40,6 @@ const detailsdata=''
     alert("Complaint Posted");
     refetch();
   };
-
-
 
   return (
     <div className="my-5 min-h-screen">
@@ -116,7 +116,9 @@ const detailsdata=''
                     className="btn btn-ghost btn-xs modal-button"
                     onClick={() => {
                       detailsId = complaints?._id;
-                      console.log(detailsId);
+                      setdetailsdata(
+                        data.find((details) => details._id === detailsId)
+                      );
                     }}
                   >
                     details
@@ -136,9 +138,7 @@ const detailsdata=''
             >
               ✕
             </label>
-{/* {
-  data.find(detailsdata=> detailsdata.id === detailsId)
-} */}
+
             <h3 className="text-lg font-bold">
               Complaint by {detailsdata?.name}
             </h3>
@@ -159,7 +159,6 @@ const detailsdata=''
           </div>
         </div>
       </div>
-      ;
     </div>
   );
 };
