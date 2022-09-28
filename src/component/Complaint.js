@@ -8,11 +8,13 @@ const Complaint = () => {
   const [user] = useAuthState(auth);
   const [complaint, setComplaint] = useState("");
   const [detailsdata, setdetailsdata] = useState("");
+  const [suggestion, setSuggestion] = useState("");
   let detailsId;
   const fetchcomplaintList = async () => {
     const res = await fetch("https://onlinecomplaintsystem.herokuapp.com/complaints");
     return res.json();
   };
+
   const { data, refetch } = useQuery("fetchcomplaintList", fetchcomplaintList);
   const {
     formState: { isValid },
@@ -20,16 +22,41 @@ const Complaint = () => {
   const handleChange = (e) => {
     setComplaint(e.target.value);
   };
+  const handleSuggestionChange = (e) => {
+    setSuggestion(e.target.value);
+  };
 
+  const handleSuggestion = (id) => {
+    if (!user) {
+      alert("You need to login first.");
+    }
+    const suggestionUpdate = {
+      suggestion: suggestion
+    };
+    fetch(`https://onlinecomplaintsystem.herokuapp.com/complaints/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(suggestionUpdate),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => console.log(result));
+
+    refetch();
+  };
   const handleSubmit = () => {
+    if (!user) {
+      alert("You need to login first.");
+    }
     const complaintdata = {
       name: user.displayName,
       email: user.email,
       photo: user.photoURL,
+      status: "Pending",
       complaint: complaint,
     };
     fetch(`https://onlinecomplaintsystem.herokuapp.com/complaints`, {
-      
       method: "POST",
       body: JSON.stringify(complaintdata),
       headers: {
@@ -109,7 +136,7 @@ const Complaint = () => {
                   </div>
                 </td>
                 <td>{complaints?.complaint.slice(0, 80)}...</td>
-                <td>pending</td>
+                <td>{complaints?.status}</td>
                 <th>
                   <label
                     htmlFor="my-modal-4"
@@ -156,6 +183,57 @@ const Complaint = () => {
               </div>
             </div>
             <div>{detailsdata?.complaint}</div>
+            <div>
+              Progress :
+              {detailsdata.status === "Pending" ? (
+                <progress
+                  className="progress progress-success w-56"
+                  value="40"
+                  max="100"
+                ></progress>
+              ) : (
+                <progress
+                  className="progress progress-success w-56"
+                  value="80"
+                  max="100"
+                ></progress>
+              )}
+            </div>
+            <label htmlFor="my-modal-7" className="btn modal-button ">
+              Any Suggestion?
+            </label>
+            <div>
+              <input type="checkbox" id="my-modal-7" className="modal-toggle" />
+              <div className="modal">
+                <div className="modal-box relative">
+                  <label
+                    htmlFor="my-modal-7"
+                    className="btn btn-sm btn-circle absolute right-2 top-2"
+                  >
+                    ✕
+                  </label>
+                  <h3 className="text-lg font-bold">
+                    Give Your Suggestion...
+                  </h3>
+                  <div className="modal-close justify-center my-2">
+                    <input
+                      className="input input-bordered input-accent w-full h-32 max-w-lg mb-3"
+                      placeholder="Suggestion....."
+                      onChange={handleSuggestionChange}
+                      />
+                      <label
+                        htmlFor="my-modal-7"
+                        className=" btn btn-accent"
+                        disabled={!isValid}
+                        type="submit"
+                        onClick={() => handleSuggestion(detailsdata._id)}
+                      >
+                      Suggestion
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
