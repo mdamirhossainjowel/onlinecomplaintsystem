@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
 import auth from "../firebase.init";
+import emailjs from "@emailjs/browser";
 import { useQuery } from "react-query";
 
 const Complaint = () => {
@@ -64,7 +65,13 @@ const Complaint = () => {
       },
     }).then((res) => res.json());
 
-    alert("Complaint Posted");
+    const emaildata = {
+      from_name: user.displayName,
+      from_email: user.email,
+      message: complaint,
+    };
+    emailjs
+    .send("service_hrt9not", "template_m064o3i", emaildata, "u9d7uDXou0oXGPBZo")
     refetch();
   };
 

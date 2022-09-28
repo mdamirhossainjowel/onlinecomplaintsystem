@@ -1,14 +1,23 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 
+import { useAuthState } from "react-firebase-hooks/auth";
+
+import auth from "../firebase.init";
 import emailjs from "@emailjs/browser";
 
 const Contactus = () => {
+
+  const [user] = useAuthState(auth);
+
   const { register, handleSubmit, reset } = useForm({
     mode: "onChange",
   });
 
   const onSubmit = (data) => {
+    if(!user){
+      return alert("Please Login First");
+    }
     emailjs
       .send("service_hrt9not", "template_0ab1t78", data, "u9d7uDXou0oXGPBZo")
       .then(
@@ -34,12 +43,16 @@ const Contactus = () => {
               <input
                 className="input input-bordered input-accent w-full max-w-lg mb-3"
                 placeholder="Full Name"
+                value={user?.displayName}
+                disabled
                 {...register("from_name")}
               />
 
               <input
                 className="input input-bordered input-accent w-full max-w-lg mb-3"
                 placeholder="Email"
+                value={user?.email}
+                disabled
                 {...register("from_email")}
               />
 
